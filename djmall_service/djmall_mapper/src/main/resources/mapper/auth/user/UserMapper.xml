@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dj.mall.mapper.auth.user.UserMapper">
+<select id="getUserResourceByUserId" resultType="com.dj.mall.entity.auth.resource.ResourceEntity">
+         SELECT
+			ar.id,
+			ar.resource_name,
+			ar.url,
+			ar.p_id,
+			ar.resource_code,
+			ar.resource_type,
+			ar.is_del
+		FROM
+			djmall_auth_user_role aur
+		LEFT JOIN djmall_auth_role_resource arr ON aur.role_id = arr.role_id
+		LEFT JOIN djmall_auth_resource ar ON arr.resource_id = ar.id
+		where
+			aur.user_id = #{userId}  AND arr.is_del = 1
+    </select>
+
+    <select id="queryUserList" resultType="com.dj.mall.bo.auth.user.UserBOResp">
+		SELECT
+			au.id AS userId,
+			au.user_name,
+			au.nick_name,
+			au.phone,
+			au.email,
+			au.user_sex,
+			au.`status`,
+			au.register_time,
+			au.is_del,
+			ar.id AS roleId,
+			ar.role_name AS roleName,
+			(
+			SELECT
+			atr.user_end_login_time
+			FROM
+			djmall_auth_time_record atr
+			WHERE
+			atr.user_id = au.id
+			ORDER BY
+			atr.user_end_login_time DESC
+			LIMIT 0,
+			1
+			) AS loginTimeShow
+		FROM
+			djmall_auth_user au
+		LEFT JOIN djmall_auth_user_role aur ON au.id = aur.user_id
+		LEFT JOIN djmall_auth_role ar ON aur.role_id = ar.id
+		<where>
+			<if test="user.userName != null and user.userName != ''">
+				au.user_name like "%"#{user.userName}"%" or au.phone like "%"#{user.userName}"%" or au.phone like "%"#{user.userName}"%"
+			</if>
+
+			<if test="user.userRole != null">
+				and au.user_role = #{user.userRole}
+			</if>
+
+			<if test="user.userSex != null and user.userSex != ''">
+				and au.user_sex = #{user.userSex}
+			</if>
+
+			<if test="user.status != null and user.status != '' ">
+				and au.status = #{user.status}
+			</if>
+			 au.is_del = 1
+			and aur.is_del = 1
+			and ar.is_del = 1
+			order by au.id desc
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dj.mall.mapper.dict.attr.AttrMapper">
+    <select id="queryAttrList" resultType="com.dj.mall.model.dto.dict.attr.AttrDTOResp">
+        SELECT
+			dpa.id AS attrId,
+			dpa.attr_name,
+			GROUP_CONCAT(
+				pav.attr_value
+				ORDER BY
+					pav.id ASC
+			) AS attrValues
+		FROM
+			djmall_dict_product_attr dpa
+		LEFT JOIN djmall_dict_product_attr_value pav ON dpa.id = pav.attr_id
+		GROUP BY
+			dpa.id
+    </select>
+    <select id="queryProductSkuAttrByProductType" resultType="com.dj.mall.bo.dict.attr.AttrBOResp">
+		SELECT
+			dpa.id AS attrId,
+			dpa.attr_name,
+			GROUP_CONCAT(pav.id) AS attrValueIds,
+			GROUP_CONCAT(pav.attr_value) AS attrValues
+		FROM
+			djmall_dict_product_sku_gm psg
+		LEFT JOIN djmall_dict_product_attr dpa ON psg.attr_id = dpa.id
+		LEFT JOIN djmall_dict_product_attr_value pav ON pav.attr_id = dpa.id
+		WHERE
+			psg.product_type = #{productType}
+		GROUP BY
+			dpa.id
+	</select>
+
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dj.mall.mapper.product.ProductMapper">
+    <select id="queryProductList" resultType="com.dj.mall.bo.product.ProductBO">
+        SELECT
+            dp.id,
+            dp.picture,
+            dp.product_describe,
+            dp.user_id,
+            au.user_role,
+        CASE
+        WHEN de.expressage = 0 THEN
+            '包邮'
+        ELSE
+            de.expressage
+        END AS productExpressageShow,
+         dp.product_name,
+         dp.product_type,
+         dp.`status`,
+        dp.like_number,
+        dp.order_number,
+        ad.`name` AS productTypeName
+        FROM
+            djmall_product dp
+        LEFT JOIN djmall_dict_express de ON dp.product_expressage = de.id
+        LEFT JOIN djmall_auth_user au ON dp.user_id = au.id
+        LEFT JOIN djmall_auth_dict ad ON ad.`code` = dp.product_type
+        <where>
+            <if test="product.productName != null and product.productName != ''">
+                dp.product_name  like "%"#{product.productName}"%"
+            </if>
+
+            <if test="product.productType != null and product.productType != ''">
+                and dp.product_type = #{product.productType}
+            </if>
+            <if test="level == 1">
+                and dp.user_id = #{product.userId}
+            </if>
+
+        </where>
+
+
+    </select>
+    <select id="indexProductList" resultType="com.dj.mall.bo.product.ProductBO">
+        SELECT
+            dp.id,
+            dp.picture,
+            dp.product_describe,
+            dp.user_id,
+            au.user_role,
+        CASE
+        WHEN de.expressage = 0 THEN
+        '包邮'
+        ELSE
+         de.expressage
+        END AS productExpressageShow,
+            dp.product_name,
+            dp.product_type,
+            dp.`status`,
+            dp.like_number,
+            dp.order_number,
+            ps.sku_price,
+            ps.sku_count,
+            ps.sku_rate,
+            ad.`name` AS productTypeName
+        FROM
+            djmall_product dp
+        LEFT JOIN djmall_dict_express de ON dp.product_expressage = de.id
+        LEFT JOIN djmall_auth_user au ON dp.user_id = au.id
+        LEFT JOIN djmall_auth_dict ad ON ad.`code` = dp.product_type
+        LEFT JOIN djmall_product_sku ps ON dp.id = ps.product_id
+        <where>
+            <if test="product.productName != null and product.productName != ''">
+                dp.product_name  like "%"#{product.productName}"%"
+            </if>
+
+            <if test="product.productType != null and product.productType != ''">
+                and dp.product_type = #{product.productType}
+            </if>
+            <if test="minPrice != null">
+                and ps.sku_price &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                and ps.sku_price &lt;= #{maxPrice}
+            </if>
+
+            <if test="role == 2">
+                and dp.user_id = #{product.userId}
+            </if>
+
+        </where>
+
+        
+    </select>
+    <select id="productDetails" resultType="com.dj.mall.bo.product.ProductBO">
+        SELECT
+            dp.id,
+            dp.picture,
+            dp.product_describe,
+            dp.user_id,
+            CASE
+        WHEN de.expressage = 0 THEN
+            '包邮'
+        ELSE
+            de.expressage
+        END AS productExpressageShow,
+         dp.product_name,
+         dp.product_type,
+         dp.`status`,
+         dp.like_number,
+         dp.order_number,
+         ps.sku_price,
+         ps.sku_count,
+         ps.sku_rate,
+         ad.`name` AS productTypeName
+        FROM
+            djmall_product dp
+        LEFT JOIN djmall_dict_express de ON dp.product_expressage = de.id
+        LEFT JOIN djmall_auth_dict ad ON ad.`code` = dp.product_type
+        LEFT JOIN djmall_product_sku ps ON dp.id = ps.product_id
+        WHERE
+            dp.id = 1
+        AND ps.is_default = 1
+    </select>
+</mapper>

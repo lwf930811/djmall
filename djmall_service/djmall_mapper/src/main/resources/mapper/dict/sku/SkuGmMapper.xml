@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dj.mall.mapper.dict.sku.SkuGmMapper">
+    <select id="querySkuList" resultType="com.dj.mall.model.dto.dict.sku.SkuGmDTOResp">
+        SELECT
+            psg.id,
+            psg.product_type,
+            ad.`name` AS typeName,
+            GROUP_CONCAT(pa.attr_name) AS attrNames
+        FROM
+            djmall_dict_product_sku_gm psg
+        LEFT JOIN djmall_auth_dict ad ON psg.product_type = ad.`code`
+        LEFT JOIN djmall_dict_product_attr pa ON pa.id = psg.attr_id
+        GROUP BY
+            psg.product_type
+    </select>
+</mapper>

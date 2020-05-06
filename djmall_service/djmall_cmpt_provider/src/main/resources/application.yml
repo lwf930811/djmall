@@ -1,0 +1,38 @@
+# 提供者
+# Dubbo 配置
+dubbo:
+  application:
+    name: cmpt_provider # 项目名(子项目名)
+    qos-enable: false # 关闭在线调试
+  registry:
+    address:  zookeeper://localhost:2181  # 注册中心地址
+  protocol:
+    name: dubbo # 协议名
+    port: 20882 # 服务端口
+  consumer:
+    check: false
+  provider:
+    timeout: 120000
+# spring
+spring:
+#  mail:
+#    host: smtp.163.com #SMTP服务器地址
+#    username: dyt13028028791@163.com #登陆账号
+#    password: duyuting123 #登陆密码（或授权码）
+#    properties:
+#      from: dyt13028028791@163.com #邮件发信人（即真实邮箱）
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB #限制单个文件大小
+#      max-request-size: 50MB #限制请求总量
+#   redis集群配置
+#  redis:
+#    sentinel:
+#      master: mymaster
+#      nodes: 192.168.88.128:27000, 192.168.88.130:27000, 192.168.88.131:27000
+#    password: 123456
+  # redis 单机配置
+  redis:
+    host: localhost
+    database: 0
+    port: 6379

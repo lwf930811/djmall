@@ -1,0 +1,32 @@
+# 提供者
+# 数据源配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url:  jdbc:mysql://localhost:3306/djmall?characterEncoding=UTF-8&useOldAliasMetadataBehavior=true&useSSL=false
+    username: root
+    password: 123456
+  # 日志
+logging:
+  level:
+    com:
+      dj:
+        mall:
+          mapper: debug
+# Dubbo 配置
+dubbo:
+  application:
+    name: platform_service # 项目名(子项目名)
+    qos-enable: false # 关闭在线调试
+  registry:
+    address:  zookeeper://localhost:2181  # 注册中心地址
+  protocol:
+    name: dubbo # 协议名
+    port: 20884 # 服务端口
+
+# Mybatis配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml  # Mapper XML
+  type-aliases-package: com.dj.mall.entity # pojo别名
+  configuration:
+    map-underscore-to-camel-case: true  # 是否开启驼峰映射

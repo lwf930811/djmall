@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dj.mall.mapper.dict.express.ExpressMapper">
+    <select id="queryExpress" resultType="com.dj.mall.model.dto.dict.express.ExpressDTOResp">
+        SELECT
+            de.id AS expressId,
+            CASE
+        WHEN de.expressage = 0 THEN
+            '包邮'
+        ELSE
+            de.expressage
+        END AS expressageName,
+         ad.`name` AS logisticsCompanyName
+        FROM
+            djmall_dict_express de
+        LEFT JOIN djmall_auth_dict ad ON de.logistics_company = ad.`code`
+    </select>
+</mapper>
